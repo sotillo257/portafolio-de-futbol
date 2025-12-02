@@ -64,9 +64,9 @@ En la sección `skills`, puedes agregar nuevas habilidades o modificar las exist
 ]
 ```
 
-### 4. Agregar Videos
+### 4. Agregar Videos de YouTube
 
-Para agregar nuevos videos a la galería:
+Para agregar nuevos videos a la galería, necesitas el URL del video de YouTube:
 
 ```json
 "videos": [
@@ -74,12 +74,40 @@ Para agregar nuevos videos a la galería:
     "category": "goles",           // goles, asistencias, regates, jugadas
     "categoryLabel": "Gol",
     "title": "Título del video",
-    "description": "Descripción del video"
+    "description": "Descripción del video",
+    "youtubeUrl": "https://www.youtube.com/watch?v=VIDEO_ID",
+    "thumbnail": ""                // Opcional: se genera automáticamente desde YouTube
   }
 ]
 ```
 
-### 5. Modificar Logros
+**Formatos de URL de YouTube aceptados:**
+- `https://www.youtube.com/watch?v=VIDEO_ID`
+- `https://youtu.be/VIDEO_ID`
+- `https://www.youtube.com/embed/VIDEO_ID`
+
+**Pasos para agregar un video:**
+1. Sube tu video a YouTube
+2. Copia el URL del video
+3. Pégalo en el campo `youtubeUrl` del archivo JSON
+4. El thumbnail se cargará automáticamente
+5. Al hacer clic en el video, se reproducirá en el modal
+
+### 5. Video Destacado
+
+Para cambiar el video destacado de la portada:
+
+```json
+"featuredVideo": {
+  "title": "⭐ Video Destacado",
+  "placeholder": "Mensaje si no hay video",
+  "youtubeUrl": "https://www.youtube.com/watch?v=VIDEO_ID"
+}
+```
+
+Si agregas un `youtubeUrl`, el video se mostrará directamente en la página principal.
+
+### 6. Modificar Logros
 
 Actualiza o agrega logros en la sección `achievements`:
 
@@ -98,6 +126,44 @@ Actualiza o agrega logros en la sección `achievements`:
 - `asistencias` - Para videos de asistencias
 - `regates` - Para videos de regates y dribles
 - `jugadas` - Para jugadas completas
+
+## 🎥 Videos de YouTube - Guía Completa
+
+### Cómo Obtener el URL de un Video de YouTube
+
+1. Ve a YouTube y abre el video que quieres agregar
+2. Haz clic en el botón "Compartir" debajo del video
+3. Copia el enlace que aparece (por ejemplo: `https://youtu.be/abc123`)
+4. Pégalo en el campo `youtubeUrl` de tu video en el JSON
+
+### Ejemplo Completo
+
+```json
+"videos": [
+  {
+    "category": "goles",
+    "categoryLabel": "Gol",
+    "title": "Golazo contra el equipo rival",
+    "description": "Gol anotado en el minuto 45 del partido final",
+    "youtubeUrl": "https://www.youtube.com/watch?v=dQw4w9WgXcQ",
+    "thumbnail": ""
+  }
+]
+```
+
+### Características
+
+- **Thumbnails Automáticos**: Las miniaturas de los videos se cargan automáticamente desde YouTube
+- **Reproducción en Modal**: Al hacer clic en un video, se abre en un modal con el reproductor de YouTube
+- **Video Destacado**: Puedes mostrar un video directamente en la portada
+- **Responsive**: Los videos se adaptan a cualquier tamaño de pantalla
+
+### Consejos
+
+- Asegúrate de que tus videos sean públicos o no listados en YouTube
+- Usa títulos descriptivos para tus videos
+- Organiza tus videos por categorías para facilitar la navegación
+- El video destacado es ideal para tu mejor jugada
 
 ## 🎨 Personalización
 

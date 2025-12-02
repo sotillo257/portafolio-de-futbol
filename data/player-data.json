@@ -64,44 +64,57 @@
   ],
   "featuredVideo": {
     "title": "⭐ Video Destacado",
-    "placeholder": "Aquí irá tu video destacado más importante"
+    "placeholder": "Aquí irá tu video destacado más importante",
+    "youtubeUrl": ""
   },
   "videos": [
     {
       "category": "goles",
       "categoryLabel": "Gol",
       "title": "Golazo de media cancha",
-      "description": "Increíble disparo desde 40 metros en el partido final del torneo."
+      "description": "Increíble disparo desde 40 metros en el partido final del torneo.",
+      "youtubeUrl": "",
+      "thumbnail": ""
     },
     {
       "category": "asistencias",
       "categoryLabel": "Asistencia",
       "title": "Pase perfecto al área",
-      "description": "Asistencia con pase filtrado entre 3 defensores."
+      "description": "Asistencia con pase filtrado entre 3 defensores.",
+      "youtubeUrl": "",
+      "thumbnail": ""
     },
     {
       "category": "regates",
       "categoryLabel": "Regate",
       "title": "Caño espectacular",
-      "description": "Regate individual dejando a 2 rivales en el camino."
+      "description": "Regate individual dejando a 2 rivales en el camino.",
+      "youtubeUrl": "",
+      "thumbnail": ""
     },
     {
       "category": "goles",
       "categoryLabel": "Gol",
       "title": "Hat-trick en 10 minutos",
-      "description": "Tres goles consecutivos en la segunda mitad."
+      "description": "Tres goles consecutivos en la segunda mitad.",
+      "youtubeUrl": "",
+      "thumbnail": ""
     },
     {
       "category": "jugadas",
       "categoryLabel": "Jugada Completa",
       "title": "Jugada colectiva perfecta",
-      "description": "Participación en jugada de 20 toques que termina en gol."
+      "description": "Participación en jugada de 20 toques que termina en gol.",
+      "youtubeUrl": "",
+      "thumbnail": ""
     },
     {
       "category": "regates",
       "categoryLabel": "Regate",
       "title": "Slalom entre rivales",
-      "description": "Avance individual desde mitad de cancha."
+      "description": "Avance individual desde mitad de cancha.",
+      "youtubeUrl": "",
+      "thumbnail": ""
     }
   ],
   "videoCategories": [

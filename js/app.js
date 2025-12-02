@@ -1,12 +1,41 @@
+// Variable global para almacenar los datos
+let playerData = null;
+
 // Cargar datos del jugador
 async function loadPlayerData() {
     try {
         const response = await fetch('./data/player-data.json');
-        const data = await response.json();
-        renderPlayerData(data);
+        playerData = await response.json();
+        renderPlayerData(playerData);
     } catch (error) {
         console.error('Error cargando datos del jugador:', error);
     }
+}
+
+// Extraer ID de video de YouTube de una URL
+function getYouTubeVideoId(url) {
+    if (!url) return null;
+
+    // Formatos soportados:
+    // https://www.youtube.com/watch?v=VIDEO_ID
+    // https://youtu.be/VIDEO_ID
+    // https://www.youtube.com/embed/VIDEO_ID
+    const regExp = /^.*(youtu.be\/|v\/|u\/\w\/|embed\/|watch\?v=|&v=)([^#&?]*).*/;
+    const match = url.match(regExp);
+
+    return (match && match[2].length === 11) ? match[2] : null;
+}
+
+// Obtener URL de thumbnail de YouTube
+function getYouTubeThumbnail(url) {
+    const videoId = getYouTubeVideoId(url);
+    return videoId ? `https://img.youtube.com/vi/${videoId}/maxresdefault.jpg` : null;
+}
+
+// Crear iframe de YouTube
+function getYouTubeEmbedUrl(url) {
+    const videoId = getYouTubeVideoId(url);
+    return videoId ? `https://www.youtube.com/embed/${videoId}?autoplay=1` : null;
 }
 
 // Renderizar todos los datos en la página
@@ -142,8 +171,29 @@ function renderSkills(data) {
 // Renderizar video destacado
 function renderFeaturedVideo(data) {
     const { featuredVideo } = data;
+    const videoContainer = document.querySelector('.featured-video .video-placeholder');
+
     document.querySelector('.featured-video h3').textContent = featuredVideo.title;
-    document.querySelector('.featured-video .video-placeholder').setAttribute('onclick', `alert('${featuredVideo.placeholder}')`);
+
+    if (featuredVideo.youtubeUrl) {
+        const embedUrl = getYouTubeEmbedUrl(featuredVideo.youtubeUrl);
+        if (embedUrl) {
+            videoContainer.innerHTML = `
+                <iframe
+                    width="100%"
+                    height="100%"
+                    src="${embedUrl.replace('?autoplay=1', '')}"
+                    frameborder="0"
+                    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                    allowfullscreen>
+                </iframe>
+            `;
+            videoContainer.style.cursor = 'default';
+            videoContainer.removeAttribute('onclick');
+        }
+    } else {
+        videoContainer.setAttribute('onclick', `alert('${featuredVideo.placeholder}')`);
+    }
 }
 
 // Renderizar categorías de video
@@ -161,18 +211,28 @@ function renderVideoCategories(data) {
 // Renderizar videos
 function renderVideos(data) {
     const { videos } = data;
-    const videosHTML = videos.map(video => `
-        <div class="video-card" data-category="${video.category}">
-            <div class="video-thumbnail">
-                <span class="play-icon">▶️</span>
+    const videosHTML = videos.map((video, index) => {
+        const thumbnail = video.youtubeUrl
+            ? getYouTubeThumbnail(video.youtubeUrl)
+            : (video.thumbnail || '');
+
+        const thumbnailStyle = thumbnail
+            ? `background-image: url('${thumbnail}'); background-size: cover; background-position: center;`
+            : '';
+
+        return `
+            <div class="video-card" data-category="${video.category}" data-video-index="${index}">
+                <div class="video-thumbnail" style="${thumbnailStyle}">
+                    <span class="play-icon">▶️</span>
+                </div>
+                <div class="video-info">
+                    <span class="video-category">${video.categoryLabel}</span>
+                    <h4 class="video-title">${video.title}</h4>
+                    <p class="video-description">${video.description}</p>
+                </div>
             </div>
-            <div class="video-info">
-                <span class="video-category">${video.categoryLabel}</span>
-                <h4 class="video-title">${video.title}</h4>
-                <p class="video-description">${video.description}</p>
-            </div>
-        </div>
-    `).join('');
+        `;
+    }).join('');
     document.querySelector('.video-grid').innerHTML = videosHTML;
 
     // Reactivar event listeners
@@ -216,14 +276,58 @@ function initVideoModal() {
     const videoCards = document.querySelectorAll('.video-card');
     videoCards.forEach(card => {
         card.addEventListener('click', () => {
-            document.getElementById('videoModal').classList.add('active');
+            const videoIndex = parseInt(card.dataset.videoIndex);
+            const video = playerData.videos[videoIndex];
+
+            if (video && video.youtubeUrl) {
+                openVideoModal(video.youtubeUrl);
+            } else {
+                alert('Video no disponible');
+            }
         });
     });
 }
 
+// Abrir modal con video de YouTube
+function openVideoModal(youtubeUrl) {
+    const modal = document.getElementById('videoModal');
+    const modalContent = modal.querySelector('.modal-content');
+    const embedUrl = getYouTubeEmbedUrl(youtubeUrl);
+
+    if (embedUrl) {
+        // Reemplazar el contenido del modal con el iframe
+        modalContent.innerHTML = `
+            <button class="close-modal" onclick="closeModal()">✕</button>
+            <div style="position: relative; width: 90vw; max-width: 900px; height: 0; padding-bottom: 50.625%;">
+                <iframe
+                    style="position: absolute; top: 0; left: 0; width: 100%; height: 100%;"
+                    src="${embedUrl}"
+                    frameborder="0"
+                    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                    allowfullscreen>
+                </iframe>
+            </div>
+        `;
+
+        modal.classList.add('active');
+    }
+}
+
 // Función para cerrar modal (global)
 function closeModal() {
-    document.getElementById('videoModal').classList.remove('active');
+    const modal = document.getElementById('videoModal');
+    modal.classList.remove('active');
+
+    // Esperar un momento antes de limpiar el contenido para permitir la animación
+    setTimeout(() => {
+        const modalContent = modal.querySelector('.modal-content');
+        modalContent.innerHTML = `
+            <button class="close-modal" onclick="closeModal()">✕</button>
+            <div class="video-placeholder" style="width: 800px; height: 450px;">
+                <span>▶️</span>
+            </div>
+        `;
+    }, 300);
 }
 
 // Smooth scroll
