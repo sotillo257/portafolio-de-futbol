@@ -1,0 +1,10 @@
+{
+  "recipients": [
+    "sotillo257@gmail.com"
+  ],
+  "formSubmitSettings": {
+    "redirectUrl": "",
+    "successMessage": "¡Gracias por tu interés! Nos pondremos en contacto contigo pronto.",
+    "errorMessage": "Hubo un error al enviar el mensaje. Por favor intenta nuevamente."
+  }
+}

@@ -1,5 +1,6 @@
 // Variable global para almacenar los datos
 let playerData = null;
+let emailConfig = null;
 
 // Cargar datos del jugador
 async function loadPlayerData() {
@@ -9,6 +10,24 @@ async function loadPlayerData() {
         renderPlayerData(playerData);
     } catch (error) {
         console.error('Error cargando datos del jugador:', error);
+    }
+}
+
+// Cargar configuración de email
+async function loadEmailConfig() {
+    try {
+        const response = await fetch('./data/email-config.json');
+        emailConfig = await response.json();
+    } catch (error) {
+        console.error('Error cargando configuración de email:', error);
+        // Configuración por defecto si no se puede cargar
+        emailConfig = {
+            recipients: ['sotillo257@gmail.com'],
+            formSubmitSettings: {
+                successMessage: '¡Gracias por tu interés! Nos pondremos en contacto contigo pronto.',
+                errorMessage: 'Hubo un error al enviar el mensaje. Por favor intenta nuevamente.'
+            }
+        };
     }
 }
 
@@ -33,9 +52,20 @@ function getYouTubeThumbnail(url) {
 }
 
 // Crear iframe de YouTube
-function getYouTubeEmbedUrl(url) {
+function getYouTubeEmbedUrl(url, autoplay = true) {
     const videoId = getYouTubeVideoId(url);
-    return videoId ? `https://www.youtube.com/embed/${videoId}?autoplay=1` : null;
+    if (!videoId) return null;
+
+    // Parámetros para evitar el error 153 y mejorar compatibilidad
+    const params = new URLSearchParams({
+        rel: '0',           // No mostrar videos relacionados
+        modestbranding: '1', // Menos branding de YouTube
+        autoplay: autoplay ? '1' : '0',
+        enablejsapi: '1',   // Habilitar API de JavaScript
+        origin: window.location.origin // Especificar origen para seguridad
+    });
+
+    return `https://www.youtube-nocookie.com/embed/${videoId}?${params.toString()}`;
 }
 
 // Renderizar todos los datos en la página
@@ -176,16 +206,17 @@ function renderFeaturedVideo(data) {
     document.querySelector('.featured-video h3').textContent = featuredVideo.title;
 
     if (featuredVideo.youtubeUrl) {
-        const embedUrl = getYouTubeEmbedUrl(featuredVideo.youtubeUrl);
+        const embedUrl = getYouTubeEmbedUrl(featuredVideo.youtubeUrl, false);
         if (embedUrl) {
             videoContainer.innerHTML = `
                 <iframe
                     width="100%"
                     height="100%"
-                    src="${embedUrl.replace('?autoplay=1', '')}"
+                    src="${embedUrl}"
                     frameborder="0"
-                    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-                    allowfullscreen>
+                    allow="accelerometer; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+                    allowfullscreen
+                    loading="lazy">
                 </iframe>
             `;
             videoContainer.style.cursor = 'default';
@@ -292,7 +323,7 @@ function initVideoModal() {
 function openVideoModal(youtubeUrl) {
     const modal = document.getElementById('videoModal');
     const modalContent = modal.querySelector('.modal-content');
-    const embedUrl = getYouTubeEmbedUrl(youtubeUrl);
+    const embedUrl = getYouTubeEmbedUrl(youtubeUrl, true);
 
     if (embedUrl) {
         // Reemplazar el contenido del modal con el iframe
@@ -303,7 +334,7 @@ function openVideoModal(youtubeUrl) {
                     style="position: absolute; top: 0; left: 0; width: 100%; height: 100%;"
                     src="${embedUrl}"
                     frameborder="0"
-                    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
                     allowfullscreen>
                 </iframe>
             </div>
@@ -344,10 +375,71 @@ function initSmoothScroll() {
 
 // Form submission
 function initContactForm() {
-    document.getElementById('contactForm').addEventListener('submit', (e) => {
+    const form = document.getElementById('contactForm');
+    const submitBtn = form.querySelector('.submit-btn');
+    const originalBtnText = submitBtn.textContent;
+
+    form.addEventListener('submit', async (e) => {
         e.preventDefault();
-        alert('¡Gracias por tu interés! Nos pondremos en contacto contigo pronto.');
-        e.target.reset();
+
+        // Obtener los datos del formulario
+        const formData = {
+            name: document.getElementById('name').value,
+            email: document.getElementById('email').value,
+            phone: document.getElementById('phone').value,
+            message: document.getElementById('message').value
+        };
+
+        // Deshabilitar botón mientras se envía
+        submitBtn.disabled = true;
+        submitBtn.textContent = 'Enviando...';
+
+        try {
+            // Enviar a cada destinatario configurado
+            const recipients = emailConfig?.recipients || ['sotillo257@gmail.com'];
+
+            // Usar FormSubmit.co para enviar el email
+            const formSubmitUrl = `https://formsubmit.co/${recipients[0]}`;
+
+            const formBody = new FormData();
+            formBody.append('name', formData.name);
+            formBody.append('email', formData.email);
+            formBody.append('phone', formData.phone);
+            formBody.append('message', formData.message);
+            formBody.append('_subject', `Nuevo contacto de ojeador: ${formData.name}`);
+            formBody.append('_template', 'table');
+
+            // Si hay más destinatarios, agregarlos como CC
+            if (recipients.length > 1) {
+                formBody.append('_cc', recipients.slice(1).join(','));
+            }
+
+            const response = await fetch(formSubmitUrl, {
+                method: 'POST',
+                body: formBody,
+                headers: {
+                    'Accept': 'application/json'
+                }
+            });
+
+            if (response.ok) {
+                const successMessage = emailConfig?.formSubmitSettings?.successMessage ||
+                    '¡Gracias por tu interés! Nos pondremos en contacto contigo pronto.';
+                alert(successMessage);
+                form.reset();
+            } else {
+                throw new Error('Error al enviar el formulario');
+            }
+        } catch (error) {
+            console.error('Error enviando el formulario:', error);
+            const errorMessage = emailConfig?.formSubmitSettings?.errorMessage ||
+                'Hubo un error al enviar el mensaje. Por favor intenta nuevamente.';
+            alert(errorMessage);
+        } finally {
+            // Rehabilitar botón
+            submitBtn.disabled = false;
+            submitBtn.textContent = originalBtnText;
+        }
     });
 }
 
@@ -369,8 +461,11 @@ function initSkillBarsAnimation() {
 }
 
 // Inicializar la aplicación
-document.addEventListener('DOMContentLoaded', () => {
-    loadPlayerData();
+document.addEventListener('DOMContentLoaded', async () => {
+    await Promise.all([
+        loadPlayerData(),
+        loadEmailConfig()
+    ]);
     initSmoothScroll();
     initContactForm();
     initSkillBarsAnimation();
