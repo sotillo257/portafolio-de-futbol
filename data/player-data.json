@@ -1,0 +1,118 @@
+{
+  "player": {
+    "name": "Michael Sotillo",
+    "age": 10,
+    "position": "Delantero",
+    "number": 10,
+    "logo": "MS10",
+    "tagline": "Desde Margarita hacia el mundo - Con pasión y dedicación, cada jugada cuenta",
+    "image": "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 250 250'%3E%3Cdefs%3E%3ClinearGradient id='grad' x1='0%25' y1='0%25' x2='100%25' y2='100%25'%3E%3Cstop offset='0%25' style='stop-color:%231976D2;stop-opacity:1' /%3E%3Cstop offset='100%25' style='stop-color:%232E7D32;stop-opacity:1' /%3E%3C/linearGradient%3E%3C/defs%3E%3Ccircle cx='125' cy='125' r='125' fill='url(%23grad)'/%3E%3Ctext x='50%25' y='50%25' font-size='100' fill='white' text-anchor='middle' dy='.3em' font-family='Arial'%3E⚽%3C/text%3E%3C/svg%3E"
+  },
+  "stats": {
+    "goals": "25+",
+    "assists": "15+",
+    "matches": "50+"
+  },
+  "personalInfo": {
+    "fullName": "Michael Sotillo",
+    "age": "10 años",
+    "position": "Delantero",
+    "preferredFoot": "Derecha",
+    "origin": "Isla de Margarita, Venezuela 🇻🇪"
+  },
+  "career": {
+    "currentTeam": "Club Juvenil",
+    "yearsPlaying": "5 años",
+    "category": "Sub-11",
+    "jerseyNumber": "#10"
+  },
+  "achievements": [
+    {
+      "icon": "🏆",
+      "title": "Goleador del torneo regional 2024"
+    },
+    {
+      "icon": "⭐",
+      "title": "Mejor jugador Sub-10 (2023)"
+    },
+    {
+      "icon": "🥇",
+      "title": "Campeón torneo local"
+    }
+  ],
+  "skills": [
+    {
+      "name": "Velocidad",
+      "percentage": 90
+    },
+    {
+      "name": "Definición",
+      "percentage": 85
+    },
+    {
+      "name": "Regate",
+      "percentage": 88
+    },
+    {
+      "name": "Visión de juego",
+      "percentage": 82
+    },
+    {
+      "name": "Control de balón",
+      "percentage": 87
+    }
+  ],
+  "featuredVideo": {
+    "title": "⭐ Video Destacado",
+    "placeholder": "Aquí irá tu video destacado más importante"
+  },
+  "videos": [
+    {
+      "category": "goles",
+      "categoryLabel": "Gol",
+      "title": "Golazo de media cancha",
+      "description": "Increíble disparo desde 40 metros en el partido final del torneo."
+    },
+    {
+      "category": "asistencias",
+      "categoryLabel": "Asistencia",
+      "title": "Pase perfecto al área",
+      "description": "Asistencia con pase filtrado entre 3 defensores."
+    },
+    {
+      "category": "regates",
+      "categoryLabel": "Regate",
+      "title": "Caño espectacular",
+      "description": "Regate individual dejando a 2 rivales en el camino."
+    },
+    {
+      "category": "goles",
+      "categoryLabel": "Gol",
+      "title": "Hat-trick en 10 minutos",
+      "description": "Tres goles consecutivos en la segunda mitad."
+    },
+    {
+      "category": "jugadas",
+      "categoryLabel": "Jugada Completa",
+      "title": "Jugada colectiva perfecta",
+      "description": "Participación en jugada de 20 toques que termina en gol."
+    },
+    {
+      "category": "regates",
+      "categoryLabel": "Regate",
+      "title": "Slalom entre rivales",
+      "description": "Avance individual desde mitad de cancha."
+    }
+  ],
+  "videoCategories": [
+    { "id": "todos", "label": "Todos" },
+    { "id": "goles", "label": "Goles" },
+    { "id": "asistencias", "label": "Asistencias" },
+    { "id": "regates", "label": "Regates" },
+    { "id": "jugadas", "label": "Jugadas Completas" }
+  ],
+  "footer": {
+    "copyright": "2024 Michael Sotillo - Joven Promesa del Fútbol",
+    "location": "Isla de Margarita, Nueva Esparta, Venezuela 🇻🇪"
+  }
+}
