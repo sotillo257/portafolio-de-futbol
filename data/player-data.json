@@ -22,9 +22,9 @@
   },
   "career": {
     "currentTeam": "Atletico Margarita",
-    "yearsPlaying": "9 años",
+    "yearsPlaying": "6 años",
     "category": "Sub-11",
-    "jerseyNumber": "#10"
+    "jerseyNumber": "#9"
   },
   "achievements": [
     {
@@ -125,7 +125,7 @@
     { "id": "jugadas", "label": "Jugadas Completas" }
   ],
   "footer": {
-    "copyright": "2024 Michael Sotillo - Joven Promesa del Fútbol",
+    "copyright": "2025 Michael Sotillo - Joven Promesa del Fútbol",
     "location": "Isla de Margarita, Nueva Esparta, Venezuela 🇻🇪"
   }
 }
