@@ -92,6 +92,15 @@ function renderHero(data) {
     document.querySelector('.position').innerHTML = `⚡ ${player.position} | ${player.age} años`;
     document.querySelector('.tagline').textContent = `"${player.tagline}"`;
 
+    // Agregar imagen de fondo si existe
+    if (player.heroBackground) {
+        const heroSection = document.querySelector('.hero');
+        heroSection.style.backgroundImage = `linear-gradient(rgba(0, 0, 0, 0.6), rgba(0, 0, 0, 0.6)), url('${player.heroBackground}')`;
+        heroSection.style.backgroundSize = 'cover';
+        heroSection.style.backgroundPosition = 'center';
+        heroSection.style.backgroundRepeat = 'no-repeat';
+    }
+
     // Renderizar estadísticas
     const statsHTML = `
         <div class="stat-box">
