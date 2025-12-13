@@ -40,6 +40,124 @@
       "title": "Campeón torneo local"
     }
   ],
+  "individualAwards": [
+    {
+      "year": "2022",
+      "title": "Campeón Goleador Copa Aniversario Atlético Margarita 2022",
+      "goals": 9,
+      "icon": "👟"
+    },
+    {
+      "year": "2023",
+      "title": "Campeón Goleador Torneo Estadal Futbol Campo 2023",
+      "goals": 46,
+      "icon": "👟"
+    },
+    {
+      "year": "2023",
+      "title": "2do. Goleador Torneo Nacional Tricolor Aragua 2023",
+      "goals": 10,
+      "icon": "🥈"
+    },
+    {
+      "year": "2024",
+      "title": "Campeón Goleador Torneo Estadal Clausura Futbol Campo 2024",
+      "goals": 14,
+      "icon": "👟"
+    },
+    {
+      "year": "2024",
+      "title": "Campeón Goleador Torneo Estadal Clausura Futbol Sala 2024",
+      "goals": 16,
+      "icon": "👟"
+    },
+    {
+      "year": "2024",
+      "title": "Campeón Goleador Súper Liga Maneiro Clausura Futbol Campo 2024",
+      "goals": 13,
+      "icon": "👟"
+    },
+    {
+      "year": "2025",
+      "title": "2do. Goleador Súper Liga Maneiro Apertura Futbol Campo 2025",
+      "goals": 8,
+      "icon": "🥈"
+    },
+    {
+      "year": "2025",
+      "title": "Campeón Goleador Súper Liga Maneiro Clausura Futbol Campo 2025",
+      "goals": 13,
+      "icon": "👟"
+    },
+    {
+      "year": "2025",
+      "title": "2do Goleador Torneo Margarita Champión Cup 2025 Futbol Sala 2025",
+      "goals": 7,
+      "icon": "🥈"
+    }
+  ],
+  "teamAwards": [
+    {
+      "year": "2022",
+      "title": "Sub Campeón Copa Aniversario Atlético Margarita 2022",
+      "icon": "🥈"
+    },
+    {
+      "year": "2023",
+      "title": "Sub Campeón Torneo Estadal Futbol Campo 2023",
+      "icon": "🥈"
+    },
+    {
+      "year": "2023",
+      "title": "3er Lugar Torneo Nacional Tricolor Aragua 2023",
+      "icon": "🥉"
+    },
+    {
+      "year": "2024",
+      "title": "Campeón Torneo Estadal Futbol Campo Clausura 2024",
+      "icon": "🏆"
+    },
+    {
+      "year": "2024",
+      "title": "Sub Campeón Torneo Estadal Futbol Sala Clausura 2024",
+      "icon": "🥈"
+    },
+    {
+      "year": "2024",
+      "title": "Campeón Súper Liga Maneiro Futbol Campo Clausura 2024",
+      "icon": "🏆"
+    },
+    {
+      "year": "2025",
+      "title": "Campeón Súper Liga Maneiro Futbol Campo Apertura 2025",
+      "icon": "🏆"
+    },
+    {
+      "year": "2025",
+      "title": "4to Lugar Torneo Margarita Champión Cup 2025 Futbol Sala",
+      "icon": "🏅"
+    },
+    {
+      "year": "2025",
+      "title": "Campeón Torneo Estadal Futbol Campo Apertura 2025",
+      "icon": "🏆"
+    },
+    {
+      "year": "2025",
+      "title": "Campeón Torneo Estadal Futbol Sala Apertura 2025",
+      "icon": "🏆"
+    },
+    {
+      "year": "2025",
+      "title": "Sub Campeón Torneo Estadal Futbol Sala Clausura 2025",
+      "icon": "🥈"
+    },
+    {
+      "year": "2025",
+      "title": "Campeón Torneo Estadal Futbol Campo Clausura 2025",
+      "icon": "🏆"
+    }
+  ],
   "skills": [
     {
       "name": "Velocidad",
