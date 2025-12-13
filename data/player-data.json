@@ -7,7 +7,7 @@
     "logo": "MS10",
     "tagline": "Desde Margarita hacia el mundo - Con pasión y dedicación, cada jugada cuenta",
     "image": "./images/profile.jpg",
-    "heroBackground": "./images/background.jpg"
+    "heroBackground": "./images/background.png"
   },
   "stats": {
     "goals": "200+",
