@@ -75,6 +75,7 @@ function renderPlayerData(data) {
     renderCareer(data);
     renderAchievements(data);
     renderSkills(data);
+    renderAwards(data);
     renderFeaturedVideo(data);
     renderVideoCategories(data);
     renderVideos(data);
@@ -196,6 +197,118 @@ function renderSkills(data) {
         `).join('')}
     `;
     document.getElementById('skills-card').innerHTML = skillsHTML;
+}
+
+// Renderizar premios
+function renderAwards(data) {
+    const { individualAwards, teamAwards } = data;
+
+    // Actualizar contadores
+    document.getElementById('individual-count').textContent = individualAwards?.length || 0;
+    document.getElementById('team-count').textContent = teamAwards?.length || 0;
+
+    // Renderizar premios individuales
+    if (individualAwards && individualAwards.length > 0) {
+        const totalGoals = individualAwards.reduce((sum, award) => sum + (award.goals || 0), 0);
+
+        const individualHTML = `
+            <div class="awards-summary">
+                <div class="summary-stat">
+                    <div class="summary-number">${individualAwards.length}</div>
+                    <div class="summary-label">Premios Individuales</div>
+                </div>
+                <div class="summary-stat">
+                    <div class="summary-number">${totalGoals}</div>
+                    <div class="summary-label">Goles Totales</div>
+                </div>
+                <div class="summary-stat">
+                    <div class="summary-number">${Math.round(totalGoals / individualAwards.length)}</div>
+                    <div class="summary-label">Promedio por Torneo</div>
+                </div>
+            </div>
+            <div class="awards-grid">
+                ${individualAwards.map(award => `
+                    <div class="award-card">
+                        <div class="award-header">
+                            <div class="award-icon">${award.icon}</div>
+                            <div class="award-info">
+                                <span class="award-year">${award.year}</span>
+                                <p class="award-title">${award.title}</p>
+                            </div>
+                        </div>
+                        ${award.goals ? `<div class="award-goals">${award.goals} Goles</div>` : ''}
+                    </div>
+                `).join('')}
+            </div>
+        `;
+        document.getElementById('individual-awards').innerHTML = individualHTML;
+    }
+
+    // Renderizar premios en equipos
+    if (teamAwards && teamAwards.length > 0) {
+        const championships = teamAwards.filter(award => award.icon === '🏆').length;
+        const runnerUps = teamAwards.filter(award => award.icon === '🥈').length;
+        const thirdPlaces = teamAwards.filter(award => award.icon === '🥉').length;
+
+        const teamHTML = `
+            <div class="awards-summary">
+                <div class="summary-stat">
+                    <div class="summary-number">${championships}</div>
+                    <div class="summary-label">🏆 Campeonatos</div>
+                </div>
+                <div class="summary-stat">
+                    <div class="summary-number">${runnerUps}</div>
+                    <div class="summary-label">🥈 Subcampeonatos</div>
+                </div>
+                <div class="summary-stat">
+                    <div class="summary-number">${thirdPlaces}</div>
+                    <div class="summary-label">🥉 Terceros Lugares</div>
+                </div>
+            </div>
+            <div class="awards-grid">
+                ${teamAwards.map(award => `
+                    <div class="award-card">
+                        <div class="award-header">
+                            <div class="award-icon">${award.icon}</div>
+                            <div class="award-info">
+                                <span class="award-year">${award.year}</span>
+                                <p class="award-title">${award.title}</p>
+                            </div>
+                        </div>
+                    </div>
+                `).join('')}
+            </div>
+        `;
+        document.getElementById('team-awards').innerHTML = teamHTML;
+    }
+
+    // Inicializar tabs
+    initAwardsTabs();
+}
+
+// Inicializar tabs de premios
+function initAwardsTabs() {
+    const tabBtns = document.querySelectorAll('.tab-btn');
+    const tabContents = document.querySelectorAll('.awards-tab-content');
+
+    tabBtns.forEach(btn => {
+        btn.addEventListener('click', () => {
+            const targetTab = btn.dataset.tab;
+
+            // Remover active de todos los botones y contenidos
+            tabBtns.forEach(b => b.classList.remove('active'));
+            tabContents.forEach(content => content.classList.remove('active'));
+
+            // Activar el botón clickeado
+            btn.classList.add('active');
+
+            // Activar el contenido correspondiente
+            const targetContent = document.getElementById(`${targetTab}-awards`);
+            if (targetContent) {
+                targetContent.classList.add('active');
+            }
+        });
+    });
 }
 
 // Renderizar video destacado
