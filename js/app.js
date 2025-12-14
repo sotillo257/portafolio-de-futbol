@@ -39,7 +39,8 @@ function getYouTubeVideoId(url) {
     // https://www.youtube.com/watch?v=VIDEO_ID
     // https://youtu.be/VIDEO_ID
     // https://www.youtube.com/embed/VIDEO_ID
-    const regExp = /^.*(youtu.be\/|v\/|u\/\w\/|embed\/|watch\?v=|&v=)([^#&?]*).*/;
+    // https://www.youtube.com/shorts/VIDEO_ID (YouTube Shorts)
+    const regExp = /^.*(youtu.be\/|v\/|u\/\w\/|embed\/|watch\?v=|&v=|shorts\/)([^#&?]*).*/;
     const match = url.match(regExp);
 
     return (match && match[2].length === 11) ? match[2] : null;
