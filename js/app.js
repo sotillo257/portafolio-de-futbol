@@ -501,35 +501,55 @@ function initContactForm() {
     const submitBtn = form.querySelector('.submit-btn');
     const originalBtnText = submitBtn.textContent;
 
+    // Agregar validación mejorada
+    const nameInput = document.getElementById('name');
+    const emailInput = document.getElementById('email');
+    const messageInput = document.getElementById('message');
+
+    // Validación en tiempo real
+    emailInput.addEventListener('blur', () => {
+        const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+        if (!emailPattern.test(emailInput.value) && emailInput.value) {
+            emailInput.setCustomValidity('Por favor ingresa un email válido');
+        } else {
+            emailInput.setCustomValidity('');
+        }
+    });
+
     form.addEventListener('submit', async (e) => {
         e.preventDefault();
 
-        // Obtener los datos del formulario
-        const formData = {
-            name: document.getElementById('name').value,
-            email: document.getElementById('email').value,
-            phone: document.getElementById('phone').value,
-            message: document.getElementById('message').value
-        };
+        // Validar campos antes de enviar
+        if (!nameInput.value.trim()) {
+            alert('Por favor ingresa tu nombre');
+            nameInput.focus();
+            return;
+        }
+
+        if (!emailInput.value.trim()) {
+            alert('Por favor ingresa tu email');
+            emailInput.focus();
+            return;
+        }
+
+        if (!messageInput.value.trim()) {
+            alert('Por favor ingresa un mensaje');
+            messageInput.focus();
+            return;
+        }
 
         // Deshabilitar botón mientras se envía
         submitBtn.disabled = true;
         submitBtn.textContent = 'Enviando...';
+        submitBtn.style.opacity = '0.7';
 
         try {
-            // Enviar a cada destinatario configurado
+            // Obtener el email del destinatario
             const recipients = emailConfig?.recipients || ['sotillo257@gmail.com'];
+            const formSubmitUrl = `https://formsubmit.co/ajax/${recipients[0]}`;
 
-            // Usar FormSubmit.co para enviar el email
-            const formSubmitUrl = `https://formsubmit.co/${recipients[0]}`;
-
-            const formBody = new FormData();
-            formBody.append('name', formData.name);
-            formBody.append('email', formData.email);
-            formBody.append('phone', formData.phone);
-            formBody.append('message', formData.message);
-            formBody.append('_subject', `Nuevo contacto de ojeador: ${formData.name}`);
-            formBody.append('_template', 'table');
+            // Crear FormData con todos los campos del formulario
+            const formBody = new FormData(form);
 
             // Si hay más destinatarios, agregarlos como CC
             if (recipients.length > 1) {
@@ -544,25 +564,85 @@ function initContactForm() {
                 }
             });
 
-            if (response.ok) {
+            const data = await response.json();
+
+            if (response.ok && data.success) {
                 const successMessage = emailConfig?.formSubmitSettings?.successMessage ||
                     '¡Gracias por tu interés! Nos pondremos en contacto contigo pronto.';
-                alert(successMessage);
+
+                // Mostrar mensaje de éxito con estilo
+                showMessage(successMessage, 'success');
                 form.reset();
             } else {
-                throw new Error('Error al enviar el formulario');
+                throw new Error(data.message || 'Error al enviar el formulario');
             }
         } catch (error) {
             console.error('Error enviando el formulario:', error);
-            const errorMessage = emailConfig?.formSubmitSettings?.errorMessage ||
-                'Hubo un error al enviar el mensaje. Por favor intenta nuevamente.';
-            alert(errorMessage);
+
+            // Mensaje de error más informativo
+            let errorMessage = emailConfig?.formSubmitSettings?.errorMessage ||
+                'Hubo un error al enviar el mensaje.';
+
+            // Agregar instrucciones alternativas
+            errorMessage += '\n\nTambién puedes contactar directamente a: sotillo257@gmail.com';
+
+            showMessage(errorMessage, 'error');
         } finally {
             // Rehabilitar botón
             submitBtn.disabled = false;
             submitBtn.textContent = originalBtnText;
+            submitBtn.style.opacity = '1';
         }
     });
+}
+
+// Función para mostrar mensajes con mejor estilo
+function showMessage(message, type = 'info') {
+    // Crear elemento de mensaje
+    const messageDiv = document.createElement('div');
+    messageDiv.textContent = message;
+    messageDiv.style.cssText = `
+        position: fixed;
+        top: 100px;
+        left: 50%;
+        transform: translateX(-50%);
+        background: ${type === 'success' ? '#2E7D32' : '#d32f2f'};
+        color: white;
+        padding: 1.5rem 2rem;
+        border-radius: 10px;
+        box-shadow: 0 4px 20px rgba(0,0,0,0.3);
+        z-index: 10000;
+        max-width: 90%;
+        text-align: center;
+        animation: slideDown 0.3s ease;
+    `;
+
+    // Agregar animación CSS
+    const style = document.createElement('style');
+    style.textContent = `
+        @keyframes slideDown {
+            from {
+                opacity: 0;
+                transform: translateX(-50%) translateY(-20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateX(-50%) translateY(0);
+            }
+        }
+    `;
+    document.head.appendChild(style);
+
+    document.body.appendChild(messageDiv);
+
+    // Remover después de 5 segundos
+    setTimeout(() => {
+        messageDiv.style.animation = 'slideDown 0.3s ease reverse';
+        setTimeout(() => {
+            document.body.removeChild(messageDiv);
+            document.head.removeChild(style);
+        }, 300);
+    }, 5000);
 }
 
 // Animate skill bars on scroll
