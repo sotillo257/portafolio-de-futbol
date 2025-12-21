@@ -334,21 +334,43 @@ function renderFeaturedVideo(data) {
     document.querySelector('.featured-video h3').textContent = featuredVideo.title;
 
     if (featuredVideo.youtubeUrl) {
-        const embedUrl = getYouTubeEmbedUrl(featuredVideo.youtubeUrl, false);
-        if (embedUrl) {
+        const isShort = featuredVideo.youtubeUrl.includes('/shorts/');
+
+        if (isShort) {
+            // Para Shorts, mostrar thumbnail con enlace a YouTube (evita error 153)
+            const thumbnail = getYouTubeThumbnail(featuredVideo.youtubeUrl);
             videoContainer.innerHTML = `
-                <iframe
-                    width="100%"
-                    height="100%"
-                    src="${embedUrl}"
-                    frameborder="0"
-                    allow="accelerometer; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
-                    allowfullscreen
-                    loading="lazy">
-                </iframe>
+                <a href="${featuredVideo.youtubeUrl}" target="_blank" rel="noopener noreferrer"
+                   style="display: block; width: 100%; height: 100%; position: relative; text-decoration: none;">
+                    <div style="width: 100%; height: 100%; background-image: url('${thumbnail}');
+                                background-size: cover; background-position: center;
+                                display: flex; align-items: center; justify-content: center;">
+                        <div style="background: rgba(0,0,0,0.7); color: white; padding: 15px 30px;
+                                    border-radius: 8px; font-size: 16px; display: flex; align-items: center; gap: 10px;">
+                            <span style="font-size: 24px;">▶️</span>
+                            <span>Ver Short en YouTube</span>
+                        </div>
+                    </div>
+                </a>
             `;
-            videoContainer.style.cursor = 'default';
-            videoContainer.removeAttribute('onclick');
+            videoContainer.style.cursor = 'pointer';
+        } else {
+            const embedUrl = getYouTubeEmbedUrl(featuredVideo.youtubeUrl, false);
+            if (embedUrl) {
+                videoContainer.innerHTML = `
+                    <iframe
+                        width="100%"
+                        height="100%"
+                        src="${embedUrl}"
+                        frameborder="0"
+                        allow="accelerometer; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+                        allowfullscreen
+                        loading="lazy">
+                    </iframe>
+                `;
+                videoContainer.style.cursor = 'default';
+                videoContainer.removeAttribute('onclick');
+            }
         }
     } else {
         videoContainer.setAttribute('onclick', `alert('${featuredVideo.placeholder}')`);
@@ -379,10 +401,16 @@ function renderVideos(data) {
             ? `background-image: url('${thumbnail}'); background-size: cover; background-position: center;`
             : '';
 
+        const isShort = video.youtubeUrl && video.youtubeUrl.includes('/shorts/');
+        const shortBadge = isShort
+            ? '<span style="position: absolute; top: 8px; right: 8px; background: #FF0000; color: white; padding: 4px 8px; border-radius: 4px; font-size: 11px; font-weight: bold;">Short</span>'
+            : '';
+
         return `
             <div class="video-card" data-category="${video.category}" data-video-index="${index}">
                 <div class="video-thumbnail" style="${thumbnailStyle}">
                     <span class="play-icon">▶️</span>
+                    ${shortBadge}
                 </div>
                 <div class="video-info">
                     <span class="video-category">${video.categoryLabel}</span>
@@ -449,6 +477,14 @@ function initVideoModal() {
 
 // Abrir modal con video de YouTube
 function openVideoModal(youtubeUrl) {
+    // Si es un Short, abrir directamente en YouTube (evita error 153)
+    const isShort = youtubeUrl && youtubeUrl.includes('/shorts/');
+
+    if (isShort) {
+        window.open(youtubeUrl, '_blank', 'noopener,noreferrer');
+        return;
+    }
+
     const modal = document.getElementById('videoModal');
     const modalContent = modal.querySelector('.modal-content');
     const embedUrl = getYouTubeEmbedUrl(youtubeUrl, true);
