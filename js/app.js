@@ -57,6 +57,9 @@ function getYouTubeEmbedUrl(url, autoplay = true) {
     const videoId = getYouTubeVideoId(url);
     if (!videoId) return null;
 
+    // Detectar si es un Short (de la URL original)
+    const isShort = url && url.includes('/shorts/');
+
     // Parámetros para evitar el error 153 y mejorar compatibilidad
     const params = new URLSearchParams({
         rel: '0',           // No mostrar videos relacionados
@@ -66,7 +69,9 @@ function getYouTubeEmbedUrl(url, autoplay = true) {
         origin: window.location.origin // Especificar origen para seguridad
     });
 
-    return `https://www.youtube-nocookie.com/embed/${videoId}?${params.toString()}`;
+    // Para Shorts, usar youtube.com en lugar de youtube-nocookie.com
+    // ya que youtube-nocookie.com tiene restricciones adicionales para Shorts
+    return `https://www.youtube.com/embed/${videoId}?${params.toString()}`;
 }
 
 // Renderizar todos los datos en la página
